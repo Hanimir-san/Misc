@@ -1,0 +1,1 @@
+Small projects, usually intended to learn a language or concept that don't warrant their own repository. Individual repositories may be created, when the projects grow in size.
