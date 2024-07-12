@@ -68,9 +68,17 @@ do
     then
     	echo alias vi='vim' >> $RC
     fi
+    if [ $(grep -c "alias groupls=" $RC) -lt 1 ] ;
+    then
+    	echo alias groupls='cat /etc/group' >> $RC
+    fi
 done
 echo $RC_TEMPLATE
 echo $RC_USER_CURRENT
+
+# Add default groups and users
+
+# Set appropriate default file and directory permissions
 
 # Install docker
 # Add user welcome message to /etc/motd/
