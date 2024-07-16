@@ -77,7 +77,10 @@ do
     fi
     if [ $(grep -c "alias groupls=" $RC) -lt 1 ] ;
     then
-    	echo alias groupls='cat /etc/group' >> $RC
+    	echo alias groupls='cat /etc/group|grep -Eo "^[^:]+"' >> $RC
+    if [ $(grep -c "alias groupls=" $RC) -lt 1 ] ;
+    then
+        echo alias userls='cat /etc/passwd|grep -Eo "^[^:]+"' >> $RC
     fi
 done
 echo $RC_TEMPLATE
