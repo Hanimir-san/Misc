@@ -75,12 +75,12 @@ do
     then
     	echo alias vi='vim' >> $RC
     fi
+    if [ $(grep -c "alias userls=" $RC) -lt 1 ] ;
+    then
+    	echo alias userls='cut -d : -f 1 /etc/passwd' >> $RC
     if [ $(grep -c "alias groupls=" $RC) -lt 1 ] ;
     then
-    	echo alias groupls='cat /etc/group|grep -Eo "^[^:]+"' >> $RC
-    if [ $(grep -c "alias groupls=" $RC) -lt 1 ] ;
-    then
-        echo alias userls='cat /etc/passwd|grep -Eo "^[^:]+"' >> $RC
+        echo alias groupls='cut -d : -f 1 /etc/group' >> $RC
     fi
 done
 echo $RC_TEMPLATE
@@ -102,5 +102,5 @@ cp -p /etc/sudoers /etc/sudoers.test
 # Create default user with pw
 # Remove pw from bash history immediately
 
-# Reloading shell for changes to take effect. If you didn't use bash, you do now.
+# Reloading shell for changes to take effect.
 exec $SHELL
