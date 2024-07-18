@@ -88,7 +88,9 @@ echo $RC_USER_CURRENT
 
 # Add default groups and users
 
-# Set appropriate default file and directory permissions
+# Change sudo timeout to appropriate value
+# Perform operation on a test file for now to not destroy the entire system
+cp -p /etc/sudoers /etc/sudoers.test
 
 # Install docker
 # Add user welcome message to /etc/motd/
@@ -99,3 +101,6 @@ echo $RC_USER_CURRENT
 # setup UFW
 # Create default user with pw
 # Remove pw from bash history immediately
+
+# Reloading shell for changes to take effect. If you didn't use bash, you do now.
+exec $SHELL
