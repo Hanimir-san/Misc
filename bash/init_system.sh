@@ -7,6 +7,30 @@ then
     exit 1 
 fi
 
+# Get distribution. Also test this whole thing. Running out of time so I'm pushing it without running.
+declare -A OS_RELEASE;
+OS_RELEASE[/etc/redhat-release]=yum
+OS_RELEASE[/etc/arch-release]=pacman
+OS_RELEASE[/etc/gentoo-release]=emerge
+OS_RELEASE[/etc/SuSE-release]=zypp
+OS_RELEASE[/etc/debian_version]=apt-get
+OS_RELEASE[/etc/alpine-release]=apk
+
+declare -s PKG_MAN;
+
+for rel_file in ${OS_RELEASE[@]};
+do
+    if [ -f $rel_file];
+    then
+        PKG_MAN=${OS_RELEASE[$rel_File]}
+    fi
+done
+
+# Install additional packages. Add more to intall.
+PKG_MAN install neofetch
+
+# Install Docker using their setup script
+
 # Get current session user. If env variable is unset for any reason, acquire it
 USER_CURRENT=$USERNAME
 
@@ -77,22 +101,22 @@ do
     fi
     if [ $(grep -c "alias userls=" $RC) -lt 1 ] ;
     then
-    	echo alias userls='cut -d : -f 1 /etc/passwd' >> $RC
+    	echo alias userls='cut -d : -f 1 /etc/passwd|sort' >> $RC
     if [ $(grep -c "alias groupls=" $RC) -lt 1 ] ;
     then
-        echo alias groupls='cut -d : -f 1 /etc/group' >> $RC
+        echo alias groupls='cut -d : -f 1 /etc/group|sort' >> $RC
     fi
 done
 echo $RC_TEMPLATE
 echo $RC_USER_CURRENT
 
-# Add default groups and users
+# Add default groups and users if any
+# Default should already exist and is "sudo" on Ubuntu and "wheel" on RHE
 
 # Change sudo timeout to appropriate value
 # Perform operation on a test file for now to not destroy the entire system
 cp -p /etc/sudoers /etc/sudoers.test
 
-# Install docker
 # Add user welcome message to /etc/motd/
 # Add docker container status to motd
 # Add container status supervision script to crontab
