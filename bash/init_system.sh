@@ -1,5 +1,9 @@
 #! /bin/bash
 
+# set -o errexit
+set -o nounset
+set -o pipefail
+
 # Check that script is being run with user admin privileges
 if [ $EUID != 0 ];
 then
@@ -29,9 +33,10 @@ done
 # Install additional packages. Add more to intall.
 PKG_MAN install neofetch
 
-# Install Docker using their setup script
+# TODO: Install Docker using their setup script
 
-# Get current session user. If env variable is unset for any reason, acquire it
+# Get current session user. This is important as the executing user will not have their rc file modified otherwise
+# if env variable is unset for any reason, acquire it
 USER_CURRENT=$USERNAME
 
 if [ ! $USER_CURRENT ] ;
@@ -117,14 +122,14 @@ echo $RC_USER_CURRENT
 # Perform operation on a test file for now to not destroy the entire system
 cp -p /etc/sudoers /etc/sudoers.test
 
-# Add user welcome message to /etc/motd/
-# Add docker container status to motd
-# Add container status supervision script to crontab
-# Add system resource supervision script to crontab
-# Disallow SSH root access
-# setup UFW
-# Create default user with pw
-# Remove pw from bash history immediately
+# TODO: Add user welcome message to /etc/motd/
+# TODO: Add docker container status to motd
+# TODO: Add container status supervision script to crontab
+# TODO: Add system resource supervision script to crontab
+# TODO: Disallow SSH root access
+# TODO: setup UFW
+# TODO: Create default user with pw if current user is root
+# TODO: Remove pw from bash history immediately
 
 # Reloading shell for changes to take effect.
 exec $SHELL

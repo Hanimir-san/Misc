@@ -1,0 +1,9 @@
+# Various commands or combinations of commands that may be useful for scripts later
+
+# Getting number of cores on a CPU
+cat /proc/cpuinfo|grep "processor" -c
+
+# Getting process list and sorting it by memory usage percentage, then only keeping individual process data and saving it to file
+top -b -n 1 -o +%MEM|tail -n +7 > mem.txt
+
+
