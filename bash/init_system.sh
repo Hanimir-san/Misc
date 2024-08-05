@@ -104,6 +104,10 @@ do
     then
     	echo alias vi='vim' >> $RC
     fi
+    if [ $(grep -c "alias cpucores=" $RC) -lt 1 ] ;
+    then
+    	echo alias cpucores='cat /proc/cpuinfo|grep -c Processor' >> $RC
+    fi
     if [ $(grep -c "alias userls=" $RC) -lt 1 ] ;
     then
     	echo alias userls='cut -d : -f 1 /etc/passwd|sort' >> $RC
