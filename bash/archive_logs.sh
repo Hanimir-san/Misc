@@ -1,21 +1,14 @@
 #! /bin/bash
 
-# Put log files in an archive and compress them
-# On first running the script, add it to crontab
-# First, confirm with user if current setup should be added to cron
-# Check, if script with given directory argument is already part of crontab
-# If not, ask user if it should be added
-# If yes, simply run it
+# This script archives all logs in the directory /var/log and saves them to a given output path
+
+is_cron=0
+script_path="$(realpath ${0})"
 
 in_dir="/var/log"
 out_dir=""
 rotate=0
 rotate_threshold=10
-
-script_path="$(realpath ${0})"
-cron_interval="* 4 * * * *"
-cron_job="${cron_interval} ${script_path}"
-is_cron=0
 
 orig_user_name="$(logname)"
 orig_user_id="$(id -u ${orig_user_name})"
@@ -107,13 +100,20 @@ if [ ! -d ${out_dir} ]; then
     fi
 fi
 
-# TODO: fix automatic adding of cronjob
+# Collect information for automatic cron job creation
+cron_interval="* 4 * * *"
+cron_job="${cron_interval} ${script_path} -i ${in_dir} -o ${out_dir} -t ${rotate_threshold}"
+if [ "${rotate}" -eq 1 ]; then
+    cron_job+=" -r"
+fi
+
 # Check if script is already a crontab. If not, offer to add it
 if [ $(crontab -u ${orig_user_name} -l | grep -c ${script_path}) -eq "0" ]; then
     add_cron="y"
     read -n 1 -rep 'Script is not yet installed as crontab. Would you like to add it?  (y/n)' add_cron
     if [ "${add_cron}" == "y" ]; then
-        (crontab -u ${orig_user_name} -l ; printf "${cron_job}\n") | crontab -u ${orig_user_name} -
+        cron_content=$(crontab -u ${orig_user_name} -l | grep -v "^$" ; printf "${cron_job}\n")
+        printf "${cron_content}\n" | crontab -u ${orig_user_name}
     fi
 fi
 
@@ -133,8 +133,6 @@ if [ "${rotate}" -eq 1 ]; then
     printf "Rotating out older log archives...\n"
     archive_files=$(ls -lt ${out_dir} | sed 's/.* //')
     for file_name in ${archive_files[@]}; do
-        printf "${file_name}\n"
-        printf "${file_num}\n"
         if [ ${file_num} -gt "${rotate_threshold}" ]; then
             rm "${out_dir}/${file_name}"
         fi
